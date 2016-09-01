@@ -1,0 +1,92 @@
+#include <iostream>
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+using namespace std;
+
+void menu();
+void run();
+void ex1();
+void ex2();
+void ex3();
+
+string crow;
+
+// lancar pro menu
+
+int main() {
+    menu();
+    return 0;
+}
+
+// menu
+
+void menu() {
+     int eh13;
+     cout << "********************************************************************\n" << "*****************ESTOU BEM TRISTE**********************\n" << "Digite **Pablo** para continuar\n";
+     cin >> crow;
+     if (crow == "Pablo") {
+              cout << "Digite 1 para abrir o exercicio 1\nDigite 2 para abrir o exercicio 2\nDigite 3 para abrir o exercicio 3\n";
+              cin >> eh13;
+              if (eh13 == 1) {
+                       ex1();
+                       }
+              else if (eh13 == 2) {
+                   ex2();
+                   }
+              else if (eh13 == 3) {
+                   ex3();
+              }
+              else if (eh13 != 1 || eh13 != 2 || eh13 != 3) {
+                   cout << "Que que voce ta fazendo cara?";
+                   }
+     system("PAUSE");
+     }
+     }
+     
+void ex1() {
+     float nu;
+     cout << "Digite o numero que voce quer analisar.\n";
+     cin >> nu;
+     if (nu == 0) {
+        cout << "Numero neutro\n";
+            }
+             else if (nu >= 1) {
+             cout << "Numero positivo\n";
+             }     
+              else if (nu < 0) {
+              cout << "Numero negativo\n";
+               }     
+}
+
+void ex2() {
+      float n1;
+       float n2;
+         cout << "Digite o numero que voce quer analisar.\n";
+         cin >> n1;
+         cout << "Digite o segundo numero a ser analisado.\n";
+         cin >> n2;
+         if (n1 > n2) {
+            cout << "Numero 1 e maior que o 2.\n";
+          }
+          else if (n1 < n2) {
+               cout << "Numero 1 e menor que o 2.\n";
+               }     
+               else if (n1 == n2) {
+                    cout << "Os dois numeros sao iguais.\n";
+                      } 
+                      } 
+void ex3() {
+     int nu;
+    int nu2;
+    std::cout << "Digite o numero que voce quer analisar.\n";
+    std::cin >> nu;
+    nu2 = nu %2;
+    if (nu2 == 0) {
+       std::cout << "Numero par\n";
+       }
+    else if (nu2 == 1) {
+         std::cout << "Numero impar\n";
+         }     
+         }
