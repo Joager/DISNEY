@@ -1,0 +1,173 @@
+#include <iostream>
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+using namespace std;
+
+void menu();
+void run();
+void ex1();
+void ex2();
+void ex3();
+void ex4();
+void ex5();
+void harambe();
+
+string crow;
+
+// lancar pro menu
+
+int main() {
+    menu();
+    return 0;
+}
+
+// menu
+
+void menu() {
+     int eh13;
+     cout << "********************************************************************\n" << "**************************ESTOU BEM TRISTE**************************\n" << "********************************************************************\n" << "Digite \"Pablo\" para continuar\n";
+     cin >> crow;
+     if (crow == "Pablo" || crow == "pablo") {
+              cout << "Digite 1 para abrir o exercicio 1\n(Checar se o numero e positivo, negativo ou neutro)\nDigite 2 para abrir o exercicio 2\n(checar se um numero e maior que o outro)\nDigite 3 para abrir o exercicio 3\n(checar se um numero e par ou impar)\nDigite 4 para abrir o exercicio 4\n(checar se um numero e positivo e se ele esta entre 100 e 200)\nDigite 5 para abrir o exercicio 5\n(checar a idade de um eleitor e ver se ele pode ou nao votar, e se e obrigatorio)\n";
+              cin >> eh13;
+              if (eh13 == 1) {
+                       ex1();
+                       }
+              else if (eh13 == 2) {
+                   ex2();
+                   }
+              else if (eh13 == 3) {
+                   ex3();
+              }
+              else if (eh13 == 4) {
+                   ex4();
+              }
+              else if (eh13 == 5) {
+                   ex5();
+              }
+              else if (eh13 == 99) {
+                   harambe();
+              }
+              else if (eh13 != 1 || eh13 != 2 || eh13 != 3 || eh13 != 4 || eh13 != 5 || eh13 != 99) {
+                   cout << "Que que voce ta fazendo cara?\n";
+                   }
+     else if (crow != "Pablo" || crow != "pablo") { 
+          cout << "Codigo errado. Pablo Deus.";
+          }
+           system("PAUSE");
+     }
+     }
+     
+void ex1() {
+     float na;
+     cout << "Digite o numero que voce quer analisar.\n";
+     cin >> na;
+     if (na == 0) {
+        cout << "Numero neutro\n";
+            }
+             else if (na >= 1) {
+             cout << "Numero positivo\n";
+             }     
+              else if (na < 0) {
+              cout << "Numero negativo\n";
+               }     
+}
+
+void ex2() {
+      float n1;
+       float n2;
+         cout << "Digite o numero que voce quer analisar.\n";
+         cin >> n1;
+         cout << "Digite o segundo numero a ser analisado.\n";
+         cin >> n2;
+         if (n1 > n2) {
+            cout << "Numero 1 e maior que o 2.\n" << n1 << " e maior que " << n2 << "!\n";
+          }
+          else if (n1 < n2) {
+               cout << "Numero 2 e maior que o 1.\n" << n2 << " e maior que " << n1 << "!\n";
+               }     
+               else if (n1 == n2) {
+                    cout << "Os dois numeros sao iguais.\n" << n1 << " e igual a " << n2 << "!\n";
+                      } 
+                      } 
+void ex3() {
+     int nu;
+     int nu2;
+     cout << "Digite o numero que voce quer analisar.\n";
+     cin >> nu;
+     nu2 = nu %2;
+       if (nu2 == 0) {
+          cout << "Numero par\n";
+           }
+            else if (nu2 == 1) {
+             cout << "Numero impar\n";
+              }     
+               }
+               
+void ex4() {
+     int ne;
+     cout << "Digite o numero a ser analisado.\n";
+     cin >> ne;
+     if (ne < 0) {
+            cout << "O numero " << ne << " e negativo e nao pode ser utilizado.\n";
+            }
+     else if (ne >= 100 && ne <= 200) {
+            cout << "O numero " << ne << " esta entre 100 e 200.\n";
+            }
+     else if (ne < 100 || ne > 200) {
+          cout << "O numero " << ne << " e menor que 100 ou maior que 200.\n";
+          }
+          }
+          
+void ex5() {
+     int nf;
+     string eleitor;
+     cout << "Digite o nome do eleitor.\n";
+     cin >> eleitor;
+     cout << "Digite a idade do eleitor.\n";
+     cin >> nf;
+     if (nf < 16) {
+            cout << "O eleitor " << eleitor << " possui " << nf << " anos de idade e nao pode votar.\n";
+            }
+     else if (nf >= 16 && nf < 18) {
+            cout << "O eleitor " << eleitor << " possui " << nf << " anos de idade. Portanto, seu voto e facultativo.\n";
+            }
+     else if (nf >= 18 && nf < 65) {
+          cout << "O eleitor " << eleitor << " possui " << nf << " anos de idade. Portanto, seu voto e obrigatorio.\n";
+          }
+     else if (nf >= 65) {
+          cout << "O eleitor " << eleitor << " possui " << nf << " anos de idade. Portanto, seu voto e facultativo.\n";
+          }
+          }
+
+void harambe() {
+     string harambe;
+     cout << "Digite o nome do novo messias.\n";
+     cin >> harambe;
+     if (harambe == "Harambe" || harambe == "harambe") {
+                 cout << "Isso mesmo. Dicks out for HARAMBE\n";
+cout << "     _...._\n";
+cout << "   .-.     /\n";
+cout << "  /o.o\\ ):.\\\n";
+cout << "  \\   / `- .`--._\n";
+cout << "  / /            `-.\n";
+cout << " '...\\     .         `.\n";
+cout << "  `--''.    '          `.\n";
+cout << "      .'   .'            `-.\n";
+cout << "   .-'    /`-.._            \\\n";
+cout << " .'    _.'      :      .-   /\n";
+cout << "| _,--`       .'     .'    /\n";
+cout << "\\ \\          /     .'     /\n";
+cout << " \\/          |    ' |    /\n";
+cout << "             \\   (  `.   ``-.\n";
+cout << "              \\   \\   `._    \\\n";
+cout << "            _.-`   )    .'    )\n";
+cout << "            `.__.-'  .-' _-.-'\n";
+cout << "                    `.__,'\n";
+                              }
+     else if (harambe != "Harambe" && harambe != "harambe") {
+          cout << "Voce errou o nome dele. HEREGE!";
+          }
+          }
