@@ -1,0 +1,24 @@
+#include <iostream>
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <dos.h>
+#include <fstream>
+
+using namespace std;
+int main(){
+
+int stage =1, score =0;
+
+ofstream file1("Save1.txt");
+
+file1 << "Stage = " << stage << endl; 
+file1 << "Score = " << score << endl; 
+
+file1.close();
+
+cout  << "Game saved to Save1.txt";
+
+return 0;
+
+}
