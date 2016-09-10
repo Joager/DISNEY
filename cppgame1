@@ -1,0 +1,47 @@
+#include <iostream>
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <dos.h>
+#include <fstream>
+
+// pra fazer
+// >> adicionar new/save/load
+// nao compila isso ainda lel
+
+using namespace std;
+
+string lugar;
+string comecar;
+string hp;
+string mp;
+string gold;
+
+void run();
+void menu();
+void saveGame();
+void lugDuria;
+void lugGrassy;
+
+int main() {
+    menu();
+    return 0;
+}
+
+void menu() {
+     cout << "titulo do jogo rs\nDigite teste para comecar";
+     cin >> comecar;
+     if (comecar == "teste" || comecar == "Teste") {
+                 run();
+                 }
+     }
+     
+void saveGame() {
+     ofstream file1("LunaSave.txt");
+     file1 << "Location = " << lugar << endl; 
+     file1 << "HP = " << hp << endl; 
+     file1 << "MP = " << mp << endl; 
+     file1 << "Gold = " << gold << endl; 
+     file1.close();
+     cout  << "Game saved to Save1.txt";
+}
