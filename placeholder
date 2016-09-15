@@ -1,0 +1,101 @@
+#include <iostream>
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <dos.h>
+#include <fstream>
+
+// pra fazer
+// >> testar new/save/load
+
+using namespace std;
+
+string lugar;
+string comecar;
+int hp;
+int mp;
+int gold;
+int level;
+int xp;
+int maxxp;
+
+void run();
+void menu();
+void saveGame();
+void loadGame();
+void loadStage();
+void move();
+
+int main() {
+    menu();
+    return 0;
+}
+
+void menu() {
+     cout << "titulo do jogo rs\nDigite new para comecar um novo jogo\n" << "Digite load para carregar um jogo\n"; 
+     cin >> comecar;
+     if (comecar == "new" || comecar == "New") {
+                 run();
+                 }
+     }
+     
+void run() {
+	cout << "Carregando jogo...";
+	lugar = "GrassyFields";
+	hp = 10;
+	mp = 10;
+	gold = 0;
+	lv = 1;
+	xp = 0;
+	maxxp = 10;
+}
+
+void move() {
+	    /*
+      W
+    A + D
+      S
+
+      1
+    4 + 2
+      3
+    */
+    switch (key) {
+    case 'w':
+        if (direction != 2) direction = 0;
+        break;
+    case 'd':
+        if (direction != 3) direction = 1;
+        break;
+    case 's':
+        if (direction != 4) direction = 2;
+        break;
+    case 'a':
+        if (direction != 5) direction = 3;
+        break;
+	}
+}
+
+void saveGame() {
+     ofstream file1("LunaSave.txt");
+     file1 << "Location = " << lugar << endl; 
+     file1 << "HP = " << hp << endl; 
+     file1 << "MP = " << mp << endl; 
+     file1 << "Gold = " << gold << endl; 
+     file1 << "LV = " << level << endl; 
+     file1 << "XP = " << exp << endl; 
+     file1.close();
+     cout  << "Game saved to Save1.txt";
+}
+void loadGame() {
+	ifstream file1;
+    file1.open ("LunaSave.txt");
+    file1 << "Location = " >> lugar >> endl; 
+    file1 >> "HP = " >> hp >> endl; 
+    file1 << "MP = " >> mp >> endl; 
+    file1 << "Gold = " >> gold >> endl; 
+    file1 << "LV = " >> level >> endl; 
+    file1 << "XP = " >> exp >> endl; 
+    file1.close();
+    cout  << "Game loaded from Save1.txt";
+}
