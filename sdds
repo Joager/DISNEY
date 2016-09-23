@@ -1,0 +1,222 @@
+#include <iostream>
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fstream>
+#include <istream>
+/* maiores problemas do codigo:
+   ao registrar uma conta, se o usuario perde-la, nao tem como saber quem registrou
+   da pra fazer uma string pra resolver isso mas os usuarios vao usar unicode para colocar acento
+   no nome, e isso me deixa com pouco tempo para resolver */
+using namespace std;
+// var
+int idconta;
+int saldo; 
+int senha;
+int ultimaconta; // ultima conta criada. quase uma library, essa var foi feita para que o programa possa ler o numero maximo de contas que existe ate "agora"
+// void
+void menu();
+void acessoConta();
+void criarConta();
+void loginConta();
+void validarSenha();
+void bancoSaque();
+void bancoTransferencia();
+void bancoConsulta();
+// bool
+bool primeiraconta = true;
+bool platinum = false;
+// main
+int main() {
+    acessoConta();
+    return 0;
+}
+// ver se o cara tem conta e agir apropriadamente
+void acessoConta() {
+     int possuiconta;
+     cout << "Voce ja possui uma conta em nosso banco?\nDigite 1 para sim\nDigite 2 para nao.";
+     switch (possuiconta) {
+            case 1:
+                 cout << "Aguarde..."; // ja tem conta = vai pra parte de login
+                 loginConta();
+                 break;
+            case 2:
+                 cout << "Aguarde..."; // nao tem conta = cria a conta
+                 criarConta();
+                 break;
+            default: "Fechando programa...\n";
+                 }
+}
+// criar a conta caso ele nao tenha
+void criarConta() {
+     int contanova; // variavel da conta nova
+     if (primeiraconta == true) { // checar se e a primeira conta criada no banco
+        idconta = 00000001; // se alguem do banco imaginario estiver lendo isso e seu banco tiver virado multinacional, boa sorte mudando esse valor
+                }
+     else {
+          ifstream file1; // ler o primeiro aquivo
+          file1.open ("conta.txt"); // o arquivo conta.txt eh um placeholder que ve qual e o numero da ultima conta criada
+          file1 >> idconta; // idconta vai virar a primeira linha desse arquivo
+          file1.close(); // parar de ler o arquivo
+          remove("conta.txt"); // remover o arquivo depois dessa coisa
+          contanova = (idconta + 1); // conta nova eh a antiga + 1 numero pra frente. nao vo deixar codigo aleatorio pq vc me deu 2 horas
+          cout << "Sua conta e " << contanova << "!\n";
+          ofstream file2("conta.txt"); // completamente inseguro, mas me deram 2 horas. vai escrever na linha do arquivo o seguinte -
+          file2 << contanova << endl; // ler a primeira linha do arquivo e depois (endline)
+          file2.close(); // fechar o arquivo de novo
+          cout << "Digite um numero de ate 3 digitos para ser a sua senha.\n";
+          cin >> senha;
+          if (senha <= 999 && senha > 0) {
+                    cout << "Sucesso! Sua senha e " << senha << "!\n";
+                    ofstream file3("senhas.txt"); // PENSA EM ALGO INSEGURO
+                    file3 << senha << endl; // salvar a senha do cara no arquivo de senhas e fechar ele.
+                    file3.close(); // pra saber a conta depois, eh so loopar o numero de linhas do arquivo senhas. (ultimaconta + 1 = contanova, lembra?)
+                    ofstream file4("saldos.txt"); // salvando o saldo do cara como 0
+                    file4 << "0" << endl; 
+                    file4.close(); // eh nois
+                    menu(); // abrir menu de uma vez
+                    }
+          else {
+               cout << "Senha invalida! Sua senha virou automaticamente 001.\n"; // pro cara nao ter que reiniciar o programa. eu sei que
+               ofstream file5("senhas.txt"); // tem como fazer uns loop pra passar por isso mas to com pouco tempo
+               file5 << senha << endl; // mesma coisa dali de cima
+               file5.close();
+               ofstream file6("saldos.txt"); // salvando o saldo do cara como 0
+               file6 << "0" << endl;
+               file6.close();
+               }
+          }
+}
+void loginConta() {
+     int reserva; // variavel reserva para o id da conta. uso abaixo
+     int linhas = 0; // numero de linhas utilizadas abaixo para loop de senha
+     int linhas2 = 0; // numero de linhas utilizadas para loop de saldo
+     int senha2; // senha para confirmar a que o usuario digitou. ja esta no servidor.
+     string line;
+     string line2;
+     char c;
+     cout << "Digite o ID (numero) da sua conta.\n";
+     cin >> idconta;
+     ifstream file1;
+     file1.open ("conta.txt");
+     file1 >> reserva;
+     if (idconta > 99999999 || idconta > reserva) {
+        cout << "Erro. Tente novamente mais tarde.\n";
+        file1.close();
+        }
+     else {
+          cout << "Conta " << idconta << " validada.\nDigite sua senha.\n";
+          cin >> senha;
+          file1.close();
+          ifstream file2("senhas.txt");
+          while (getline(file2, line) && linhas < idconta) {
+                ++linhas;
+                }
+          cout << "Teste - numero de linhas:" << linhas << "\n";
+          getline(file2,senha2);
+          file2.close();
+          if (senha == senha2) {
+             cout << "Senha validada. Aguarde...\n";
+             ifstream file3("saldos.txt"); // ler o saldo do camarada
+             while (getline(file3, line2) && linhas2 < idconta) {
+                ++linhas2;
+                }
+             cout << "Teste - numero de linhas2 Debug:" << linhas "\n";
+             getline(file3,saldo);
+             file3.close();
+             menu();
+             }
+          }
+}
+void menu() {
+     string opcao;
+     cout << "Banco CePlusPlus\nDigite \"saque\" para sacar dinheiro\nDigite \"deposito\" para depositar dinheiro\nDigite \"consulta\" para consultar a sua conta.";
+     cin >> opcao;
+     if (opcao == "saque" || opcao == "Saque" || opcao == "SAQUE") { // to fazendo so das tres opcoes mais comuns
+        bancoSaque();
+        }
+     else if (opcao == "transferencia" || opcao == "Transferencia" || opcao == "TRANSFERENCIA") {
+        bancoTransferencia();
+        }
+     else if (opcao == "consulta" || opcao == "Consulta" || opcao == "CONSULTA") {
+        bancoConsulta();
+        }
+}
+void bancoSaque() {
+     int saque; // valor do saque
+     cout << "Digite o valor que deseja sacar, " << idconta; // inseguro
+     cin >> valor;
+     if (saque > 800 && platinum == false && saque < 1200) {
+        cout << "Erro. Voce tentou sacar o valor de " << saque << ", mas esse valor e reservado a membros Platinum.\n";
+        }
+     else if (saque > 800 && platinum == false && saque > 1200) {
+        cout << "Erro. Voce tentou sacar o valor de " << saque << ", mas nao e possivel sacar um valor tao grande.\n";
+        }
+     else if (saque > 1200 && platinum == true) {
+          cout << "Erro. Voce tentou sacar o valor de " << saque << ", mas nao e possivel sacar um valor tao grande\nMesmo sendo Platinum. Tente um valor ate 1200.\n";
+          }
+     else if (saque < 0) {
+          cout << "Voce esta tentando sacar um numero negativo. Tente novamente.\n";
+          }
+     else {
+          saldo = (saldo - saque);
+          cout << "Saque de valor " << saque << " realizado com sucesso.\n";
+          }
+void bancoTransferencia() {
+     int trans; // as mana - brinks - valor da transferencia
+     int conta2; // a conta que o dinheiro devera ser transferido. vai ser avaliada pelo programa
+     int linhas3 = 0; // linhas pro loop I
+     int saldo2; // saldo da conta q o bagulho vai ser transferido
+     string line3; // linhas pro loop II
+     cout << "Digite o valor que deseja transferir.\n";
+     cin >> trans;
+     if (trans < 1 || trans > 999999999) {
+        cout << "Voce tentou transferir um valor invalido!\n";
+        }
+     else if (trans >= 1500 && saldo < 10 && platinum == false) {
+          cout << "Voce tentou transferir um valor maior que 1500, mas nao possui o saldo necessario para cobrir a taxa.\n";
+          }
+     else if (trans >= 5000 && saldo < 15 && platinum == true) {
+          cout << "Voce tentou transferir um valor maior que 5000, mas nao possui o saldo necessario para cobrir a taxa.\n";
+          }
+     cout << "Digite a conta para qual deseja transferir.\n";
+     cin >> conta2;
+     ifstream file1; // agora vamos validar e ver se a conta existe! 1500 10 5000 15
+     file1.open ("conta.txt"); 
+     file1 >> ultimaconta;
+     file1.close();
+     if (conta2 > ultimaconta || conta2 < 1) {
+        cout << "Erro. A conta nao existe.\n";
+        }
+     else {
+          if (trans >= 1500 && platinum == false) {
+             saldo = (saldo - trans - 10);
+             cout << "O seu saldo atual e de " << saldo "!\n";
+             }
+          else if (trans >= 5000 && platinum == true) {
+               saldo = (saldo - trans - 15);
+               cout << "O seu saldo atual e de " << saldo "!\n";
+             }
+          else {
+               saldo = (saldo - trans - 15);
+               cout << "O seu saldo atual e de " << saldo "!\n"; // o codigo antigo ta ali embaixo se vc quiser dar uma olhada, abaixo de utilities
+               }
+          }
+}
+void bancoConsulta() {
+     cout << "Usuario " << idconta << "\n";
+     cout << "Voce possui " << saldo << " de saldo!\n";
+     }
+          
+// Utilidades
+//     for ( int x = 0; x < 99999999; x++ ) {     
+
+// code antigo da transferencia
+
+/*          ifstream file1("saldo.txt");
+          while (getline(file1, line3) && linhas3 < conta2) {
+                ++linhas3;
+                }
+          cout << "Teste - numero de linhas:" << linhas3 "\n";
+          getline(file1,saldo2);
+          file1.close(); */
