@@ -1,0 +1,349 @@
+#include <stdlib.h>
+#include <stdio.h>
+/*    FILE *fp  !!! DELETAR DEPOIS !!!
+    fp = fopen("test.txt", "w");
+*/
+
+/* void desenharAviao() abaixo. LEIA-ME ANTES
+ * "Mas afinal, senhor programador, por que nao um for() dentro de outro for()
+ * para fazer o array bidimensional?"
+ * R: desenhar por fileira torna muito mais facil de modificar o programa, visto
+ * que tem menos logica de loop e mais "desenho". Da pra modificar o espaco entre
+ * fileiras em segundos, melhorar a beleza da selecao, etc...
+ * ...a custo de pouquissima memoria a mais, visto que o programa roda em console
+ * e nao estamos em 1984.
+*/
+
+/* !!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!!
+ * - Saldo
+ * - Acabar os voids
+ * - Mudar de "NORMAL" para "EOONOMICO" nas nomeclaturas !!! URGENTE !!!
+ * ---------------------------------------------------------------------
+ * Todos os comentarios acima dessa linha devem ser removidos antes de
+ * entregar o trabalho !!!
+ * ---------------------------------------------------------------------
+*/
+ 
+// constantes
+ 
+#define VALORP 150 // valor P...rimeira classe
+#define VALORE 80  // valor E...conomico
+ 
+// variaveis INT
+ 
+int aviao; // aviao selecionado. variavel global que transita entre voids
+int selecao; // o assento selecionado. global porque tambem transita entre voids
+int saldo; // saldo do usuario. !!! LEIA SECAO - ADMINISTRADOR - PARA TESTES !!!
+ 
+// CHARes e arrays
+ 
+char assentosP[2][4] = {
+     {'D', 'D', 'D', 'D'}, // [0][0], [0][1], [0][2]...
+     {'D', 'D', 'D', 'D'} // [1][0], [1][1], [1][2]...
+     };
+     
+/* NOTAS SOBRE VARIAVEL ACIMA (README)
+ * Array bidimensional 2x4 que representa as cadeiras de primeira classe
+*/
+ 
+char assentosN[5][6] = {
+     {'D', 'D', 'D', 'D', 'D', 'D'},
+     {'D', 'D', 'D', 'D', 'D', 'D'},
+     {'D', 'D', 'D', 'D', 'D', 'D'},
+     {'D', 'D', 'D', 'D', 'D', 'D'},
+     {'D', 'D', 'D', 'D', 'D', 'D'},
+     };
+/* NOTAS SOBRE A VARIAVEL ACIMA (README)
+ * Array 5x6 que representa as cadeiras normais
+ * Ta em CHAR e nao em INT porque tem o caractere 'D', mesmo que eu pudesse colocar '0' e '1' para representar disponivel
+ * ou ocupado
+*/
+ 
+/* -------------------------------------------------------------------------
+ * AVISO: tem como mudar o ARRAY usando assentos[x][x] = 'LETRA'.
+ * a var 'LETRA' pode ser letra maiuscula D ou O (D = livre; O = ocupado).
+ * -------------------------------------------------------------------------
+*/
+
+// V O I D S (nomes auto-explicativos)
+ 
+void menu(); 
+void consultarTrechos();
+void consultarAssentos();
+void efetuarReserva();
+void cancelarReserva();
+
+// divisao II
+
+void selecionarAviao();
+void desenharAviao();
+void selecionarAssento();
+void calculoAssento();
+void limparTela();
+
+/* --------------------------------------------------
+ *                 INICIO DO PROGRAMA
+ * --------------------------------------------------
+*/
+
+/* Notas:
+ * Uso _sleep ao inves de Sleep pra nao ter q importar a biblioteca
+ * "Windows.h", que deixa o programa como virus para alguns antivirus   
+*/
+
+int main() {
+    menu();
+    system("PAUSE");
+    return 0;  
+}
+void menu() {
+     int opcao;
+     printf("************\n*** Sistema ATP **\n************\n");
+     printf("Digite 1 para CONSULTAR TRECHOS......\nDigite 2 para CONSULTAR ASSENTOS......\nDigite 3 para EFETUAR RESERVA......\nDigite 4 para CANCELAR RESERVA......\nDigite 5 para FINALIZAR ATENDIMENTO......\n");
+     do {
+         scanf("%d", &opcao);
+         if (opcao != 1 && opcao != 2 && opcao != 3 && opcao != 4 && opcao != 5) { // validando se eh um numero REMOVER DEPOIS
+            printf ("vc eburo");
+            }
+         switch (opcao) {
+                case 1:
+                     consultarTrechos();
+                     break;
+                case 2:
+                     consultarAssentos();
+                     break;
+                case 3:
+                     efetuarReserva();
+                     break;
+                case 4:
+                     cancelarReserva();
+                     break;
+                case 5:
+                     exit(0);
+                     break;
+                default: "Erro no sistema.";
+                }
+         } while (opcao != 1 && opcao != 2 && opcao != 3 && opcao != 4 && opcao != 5);     
+}
+
+/* ------------------------------------------------------
+ *                    CONSULTAR TRECHOS
+ *               Notas sobre variaveis abaixo
+ * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ * Coloquei string disponivel e ocupado pra nao ter que
+ * dar CTRL-C CTRL-V no "array" cada vez que for chama-lo
+ * a custo de um valor desprezivel de memoria
+ * ------------------------------------------------------
+*/ 
+void consultarTrechos() { // executa a consulta de trechos
+     int opcao;
+     char estado1[11] = "";
+     char estado2[11] = "";
+     char estado3[11] = "";
+     char estado4[11] = "";
+     char disponivel[11] = {'D', 'I', 'S', 'P', 'O', 'N', 'I', 'V', 'E', 'L', '\0'};
+     char ocupado[11] = {'O', 'C', 'U', 'P', 'A', 'D', 'O', '\0', '\0', '\0'};
+     printf("---*TRECHOS*---\n"); // placeholder
+     printf("Placeholdeando AVIAO1 para OCUPADO");// !!!CUIDADO PLACEHOLDER!!!
+     printf("Placeholdeando AVIAO2 para DISPONIVEL");// !!!CUIDADO PLACEHOLDER!!!
+     printf("Placeholdeando AVIAO3 para DISPONIVEL");// !!!CUIDADO PLACEHOLDER!!!
+     printf("Placeholdeando AVIAO4 para OCUPADO");// !!!CUIDADO PLACEHOLDER!!!
+     estado1[11] = ocupado[11];
+     estado2[11] = disponivel[11];
+     estado3[11] = disponivel[11];
+     estado4[11] = ocupado[11];
+     printf("1 - Aviao I "); // nao da NEWLINE porque ele vai escrever o ESTADO DO AVIAO ao lado
+//        printf("- DISPONIVEL"); so deixando ai qualquer coisa
+     printf("- %c \n", &estado1[11]);
+     printf("2 - Aviao II ");
+     printf("- %c \n", &estado2[11]);
+     printf("2 - Aviao III ");
+     printf("- %c \n", &estado3[11]);
+     printf("2 - Aviao IV ");
+     printf("- %c \n", &estado4[11]);
+     scanf("%d", opcao);
+// ********* MUDAR ABAIXO *********
+
+     REFAZ: do { // REFAZ pra gente usar GOTO
+         if (opcao < 1 || opcao > 4) { // se nao selecionar uma dessas...
+            printf("Erro! Digite um numero de 1 a 4......\n"); // print erro
+            }
+         if (opcao == 1 && estado1[11] == ocupado[11]) {
+            printf("GOTO refaz\n"); // teste de GOTO
+            goto REFAZ; // ??? PLACEHOLDER ???
+            }
+         switch (opcao) {
+                case 1:
+                     aviao = 1; // seleciona o aviao
+                     selecionarAviao();
+                     break;
+                case 2:
+                     aviao = 2; // seleciona o aviao
+                     selecionarAviao();
+                     break;
+                case 3:
+                     aviao = 3; // seleciona o aviao
+                     selecionarAviao();
+                     break;
+
+
+                case 4:
+                     aviao = 4; // seleciona o aviao
+                     selecionarAviao();
+                     break;
+                default: "Erro no sistema.\n";
+                }
+         } while (opcao < 1 || opcao > 4);
+}
+ 
+// outros voids acima
+ 
+void selecionarAviao() { // 8 quadrados
+     int opcao; // opcao selecionada no primeiro DO
+     printf("AVIAO SELECIONADO --> AVIAO DE NUMERO &d\n---------------------------------\n", &aviao);
+     desenharAviao();
+     printf("Deseja selecionar um ASSENTO agora?\nDigite 1 para SIM, 2 para NAO");
+     do {
+         scanf("%d", &opcao);
+         if (opcao < 1 || opcao > 2) {
+                   printf("Erro!\nDigite 1 para SIM......\nDigite 2 para NAO......\n");
+                   }
+         switch(opcao) {
+                       case 1: // nao usei outro void nesse case (algo como pegarAviao() e similares) porque esse void foi feito especialmente pra selecionar o aviao. seria redundante [1/2]
+                            printf("SELECIONE O SEU ASSENTO:\nDigite o NUMERO do assento que deseja reservar...\n(Os numeros das cadeiras estao a sua DIREITA)");
+                            do { // apesar que deixaria mais organizado
+                               scanf("%d", &selecao);
+                               if (selecao < 1 || selecao > 38) {
+                                  printf("Digite um numero de 1 a 38!\n");
+                                  }
+                               selecao == (selecao - 1); // mudando para o valor array da coisa (0-37 ao inves de 1-38)
+                               if (selecao >= 0 && selecao <= 7) { // se for uma das cadeiras x-men primeira classe
+                                  if (assentosP[selecao / 4][selecao % 4] == 'O') { // se o assento estiver ocupado...
+                                     printf("O assento selecionado esta OCUPADO! Tente outro.\n"); // ??? ADICIONAR GOTO ???
+                                     }
+                                  else {
+                                       selecionarAssento(); // ir para o menu de selecionar assento
+                                       }
+                               }
+                               else {
+                                    if (selecao >= 8 && selecao < 37) { // cadeiras normais
+                                       if (assentosN[selecao / 15][selecao % 15] = 'O') {
+                                          printf("O assento selecionado esta OCUPADO! Tente outro.\n");
+                                          }
+                                       else {
+                                            selecionarAssento();
+                                            }
+                                    }
+                               }
+                            } while (selecao < 1 || selecao > 38); // enquanto o cara nao fizer o negocio direito, vai dar isso ai
+                            break;
+                       case 2:
+                            printf("Voltando para o menu...\n");
+                            _sleep(10);
+                            limparTela();
+                            _sleep(10);
+                            menu();
+                            break;
+                       default: "Erro no sistema!\n";
+                       }
+         } while (opcao < 1 || opcao > 2);                     
+}
+
+void desenharAviao() {
+     int x; // variavel "dummy" usada em loop. o nome nao eh importante
+     int y; // ditto. Os loops serao por FILEIRAS
+     for (x = 0; x < 2; x++) { // loop 1: assentos primeira classe
+         for (y = 0; y < 8; y++) { // 8 posicoes, mesmo q sejam 4 fileiras
+             if (y == 2 || y == 4 || y == 5 || y == 7) { // pula o desenho de "partes em branco"
+                printf(" ");
+                }
+             else {
+                  printf("%c", &assentosP[x][y]);
+                  }
+             if (y == 8 && x == 0) {
+                   printf("                     "); // da espaco pra "segunda tela"
+                   printf("1 2        3 4    D = DISPONIVEL\n"); // desenha os numeros e a legenda
+                   }
+             else {
+                  if (y == 8 && x == 1) {
+                   printf("                     "); // da espaco
+                   printf("5 6        7 8    O = OCUPADO\n"); // numeros e legenda
+                   }
+             }
+         }
+     }
+     for (x = 0; x < 5; x++) { // loop 2: assentos normais. reseta as var do loop 1
+         for (y = 0; y < 8; y++) { // 8 posicoes, mesmo q sejam 6 fileiras
+             if (y == 4 || y == 5 || y == 12 || y == 13 || y == 20 || y == 21 || y == 28 || y == 29 || y == 36 || y == 37) { // pula o desenho de "partes em branco"
+                printf(" ");
+                } // desenha espaco em branco
+             else {
+                  printf("%c", &assentosN[x][y]); // desenha o array
+                  }
+             if (y == 8 && x == 0) {
+                   printf("                     "); // espaco antes de desenhar a "segunda tela"
+                   printf("9 10 11    12 13 14\n"); // fileira                                  
+                   }
+             else {
+                  if (y == 8 && x == 1) {
+                     printf("                     ");  // espaco antes de desenhar a "segunda tela"
+                     printf("15 16 17    18 19 20\n"); // fileira                                  
+                     }
+                  else {
+                       if (y == 8 && x == 2) {
+                            printf("                     ");  // espaco antes de desenhar a "segunda tela"
+                            printf("21 22 23    24 25 26\n"); // fileira                                  
+                            }
+                       else {
+                            if (y == 8 && x == 3) {
+                                  printf("                     ");  // espaco antes de desenhar a "segunda tela"
+                                  printf("27 28 29    30 31 32\n"); // fileira                                  
+                                  }
+                            else {
+                                 printf("                     ");  // espaco antes de desenhar a "segunda tela"
+                                 printf("33 34 35    36 37 38\n"); // fileira                                  
+                                 }
+                       }
+                  }
+             }
+         }
+     }
+}
+ 
+void selecionarAssento() {
+     int opc; // variavel da opcao selecionada no menu
+     if (selecao > 0 && selecao < 5) { // 1a classe
+        printf("Voce selecionou o assento %d, PRIMEIRA CLASSE.\nValor: %d\nDeseja CONTINUAR? (Digite 1 para SIM, 2 para NAO)\n", selecao, VALORP);
+        }
+     else {
+          printf ("Voce selecionou o assento %d, ECONOMICO.\nValor: %d\nDeseja CONTINUAR? (Digite 1 para SIM, 2 para NAO)\n", selecao, VALORE);
+          }
+     do { // hora do loop
+         scanf("%d", &opc);
+         if (opc < 1 || opc > 2) { // aceitar so 1 e 2
+            printf("Digite 1 para SIM......\n2 para NAO......\n");
+            }
+         switch(opc) {
+                       case 1:
+                            // continuar
+                            break;
+                       case 2:
+                            printf("Voltando para o menu...\n");
+                            _sleep(10);
+                            limparTela();
+                            _sleep(10);
+                            menu();
+                            break;
+                       default: "Erro!\n"; // !!! PLACEHOLDER !!!
+         }
+     } while (opc < 1 || opc > 2);
+}
+
+/* -----------------------------
+ *       UTILIDADES E ETC       
+ * -----------------------------
+*/
+ 
+void limparTela() { // usar um system("cls") seco no programa causa LEAK DE MEMORIA. colocar ele num void anula isso
+     system("cls");
+}
