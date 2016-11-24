@@ -1,0 +1,675 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+/*    FILE *fp  !!! DELETAR DEPOIS !!!
+    fp = fopen("test.txt", "w");
+*/
+
+/* void desenharAviao() abaixo. LEIA-ME ANTES
+ * "Mas afinal, senhor programador, por que nao um for() dentro de outro for()
+ * para fazer o array bidimensional?"
+ * R: desenhar por fileira torna muito mais facil de modificar o programa, visto
+ * que tem menos logica de loop e mais "desenho". Da pra modificar o espaco entre
+ * fileiras em segundos, melhorar a beleza da selecao, etc...
+ * ...a custo de pouquissima memoria a mais, visto que o programa roda em console
+ * e nao estamos em 1984.
+*/
+
+/*
+_______________
+0[]2[][]5[]7   |
+8[]10[][]13[]15|
+----------------
+____________________
+16 17 18[][]21 22 23|
+24 25 26[][]29 30 31|
+32 33 34[][]37 38 39|
+40 41 42[][]45 46 47|
+48 49 50[][]51 52 53|
+---------------------
+~~~~~~~~~~~~~~~~~~~~~~
+|x|1|x|3|4|x|6|x|    /
+|x|9|x|11|12|x|14|x| /
+|x|x|x|19|20|x|x|x|  /
+|x|x|x|27|28|x|x|x|  /
+|x|x|x|35|36|x|x|x|  /
+|x|x|x|43|44|x|x|x|  / 
+|x|x|x|51|52|x|x|x|  /  
+~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!! - CONSULTAR ASSENTO e                                            !!!
+ * !!! - CANCELAR RESERVA                                               !!!
+ * !!! - Mudar de "NORMAL" para "EOONOMICO" nas nomeclaturas !!! URGENTE!!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * ------------------------------------------------------------------------
+ * Todos os comentarios acima dessa linha devem ser removidos antes de
+ * entregar o trabalho !!!
+ * ------------------------------------------------------------------------
+*/
+ 
+// constantes
+ 
+#define VALORP 150 // valor P...rimeira classe
+#define VALORE 80  // valor E...conomico
+ 
+// variaveis INT
+ 
+int aviao; // aviao selecionado. variavel global que transita entre voids
+int selecao; // o assento selecionado. global porque tambem transita entre voids
+int saldo = 1000; // saldo do usuario, 1000 como default
+ 
+// CHARes e arrays
+
+// aviao 1 ate 4, arrays de primeira classe e normais 
+char assentosP1[8] = {'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'}; // [0][0], [0][1], [0][2]...     
+char assentosN1[30] = {'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L' ,'L', 'L', 'L', 'L', 'L', 'L'};
+char assentosP2[8] = {'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'}; // [0][0], [0][1], [0][2]...     
+char assentosN2[30] = {'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L' ,'L', 'L', 'L', 'L', 'L', 'L'};
+char assentosP3[8] = {'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'}; // [0][0], [0][1], [0][2]...     
+char assentosN3[30] = {'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L' ,'L', 'L', 'L', 'L', 'L', 'L'};
+char assentosP4[8] = {'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'}; // [0][0], [0][1], [0][2]...     
+char assentosN4[30] = {'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L' ,'L', 'L', 'L', 'L', 'L', 'L'};
+
+
+/* NOTAS SOBRE A VARIAVEL ACIMA (README)
+ * Ta em CHAR e nao em INT porque tem o caractere 'D', mesmo que eu pudesse colocar '0' e '1' para representar disponivel
+ * ou ocupado
+*/
+
+char disponivel[11] = {'D', 'I', 'S', 'P', 'O', 'N', 'I', 'V', 'E', 'L', '\0'};
+char esgotado[11] = {'E', 'S', 'G', 'O', 'T', 'A', 'D', 'O', '\0', '\0'};
+char estado1[11] = "";
+char estado2[11] = "";
+char estado3[11] = "";
+char estado4[11] = "";
+
+// os char estao em global para serem usados entre voids
+      
+/* -------------------------------------------------------------------------
+ * AVISO: tem como mudar o ARRAY usando assentos[x][x] = 'LETRA'.
+ * a var 'LETRA' pode ser letra maiuscula D ou O (L = livre; R = Reservado).
+ * -------------------------------------------------------------------------
+*/
+
+// V O I D S (nomes auto-explicativos)
+ 
+void menu(); 
+void consultarTrechos();
+void consultarAssentos(int a);
+void efetuarReserva();
+void cancelarReserva();
+
+// divisao II
+
+void selecionarAviao();
+void desenharAviao();
+void selecionarAssento();
+void calculoAssento();
+
+// utilidades
+
+void limparTela();
+void converterEstado();
+
+/* --------------------------------------------------
+ *                 INICIO DO PROGRAMA
+ * --------------------------------------------------
+*/
+
+int main() {
+    menu();
+    system("PAUSE");
+    return 0;  
+}                           
+void menu() {  
+     int opcao;
+     int opcao2;
+     printf("************\n*** Sistema ATP **\n************\n");
+     converterEstado();
+     printf("Digite 1 para CONSULTAR TRECHOS......\nDigite 2 para CONSULTAR ASSENTOS......\nDigite 3 para EFETUAR RESERVA......\nDigite 4 para CANCELAR RESERVA......\nDigite 5 para FINALIZAR ATENDIMENTO......\n");
+     do {
+         scanf("%d", &opcao);
+         if (opcao != 1 && opcao != 2 && opcao != 3 && opcao != 4 && opcao != 5) { // validando se eh um numero REMOVER DEPOIS
+            printf ("Digite um numero de 1 a 5!\n");
+            }
+         switch (opcao) {
+                case 1:
+                     consultarTrechos();
+                     break;
+                case 2:
+                     do {
+                        printf("Digite o numero do AVIAO ou TRECHO que deseja consultar......\n(Representado por um numero de 1 a 4......");
+                        scanf("%d", &opcao2);
+                        if (opcao2 < 1 || opcao2 > 4) {
+                           printf("Digite um numero de 1 a 4 que representa o AVIAO/TRECHO que deseja consultar!");
+                           }
+                        else {
+                             aviao = opcao2;
+                             consultarAssentos(opcao2); // consulta os assentos referentes ao aviao de numero OPCAO2
+                             }
+                     } while (opcao2 < 1 || opcao2 > 4);
+                     break;
+                case 3:
+                     efetuarReserva();
+                     break;
+                case 4:
+                     cancelarReserva();
+                     break;
+                case 5:
+                     exit(0);
+                     break;
+                default: "Erro no sistema.";
+                }
+         } while (opcao != 1 && opcao != 2 && opcao != 3 && opcao != 4 && opcao != 5);     
+}
+
+/* ------------------------------------------------------
+ *                    CONSULTAR TRECHOS
+ *               Notas sobre variaveis abaixo
+ * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ * Coloquei string disponivel e esgotado pra nao ter que
+ * dar CTRL-C CTRL-V no "array" cada vez que for chama-lo
+ * a custo de um valor desprezivel de memoria
+ * O programa seta automaticamente se um aviao esta
+ * DISPONIVEL ou ESGOTADO assim que ele inicializa o MENU
+ * ------------------------------------------------------
+*/ 
+void consultarTrechos() { // executa a consulta de trechos
+     int opcao;
+     printf("Placeholdeando AVIAO1 para DISPONIVEL\n");// !!!CUIDADO PLACEHOLDER!!!
+     printf("Placeholdeando AVIAO2 para DISPONIVEL\n");// !!!CUIDADO PLACEHOLDER!!!
+     printf("Placeholdeando AVIAO3 para DISPONIVEL\n");// !!!CUIDADO PLACEHOLDER!!!
+     printf("Placeholdeando AVIAO4 para ESGOTADO\n");// !!!CUIDADO PLACEHOLDER!!!
+     converterEstado();
+     printf("---*TRECHOS*---\n"); // placeholder
+     printf("---------------\n-Trecho I :: Aviao I\n-Rio de Janeiro --> Sao Paulo\n-%s\n---------------\n", &estado1);
+     printf("---------------\n-Trecho II :: Aviao II\n-Belo Horizonte --> Curitiba\n-%s\n---------------\n", &estado2);
+     printf("---------------\n-Trecho III :: Aviao III\n-Rio de Janeiro --> Belo Horizonte\n-%s\n---------------\n", &estado3);
+     printf("---------------\n-Trecho IV :: Aviao 4\n-Sao Paulo --> Curitiba\n-%s\n---------------\n", &estado4);
+     printf("Digite o NUMERO de um trecho para consulta-lo...\n");
+     do { // REFAZ pra gente usar GOTO
+        scanf("%d", &opcao);
+        if (opcao < 1 || opcao > 4) { // se nao selecionar uma dessas...
+           printf("Erro! Digite um numero de 1 a 4......\n"); // print erro
+           }
+        if (opcao == 1 && estado1[2] == 'G') { // caractere [2] eh G = ta ESGOTADO. arrays comecam do 0, entao [2] == 3 caractere
+           printf("O trecho selecionado esta ESGOTADO! Tente novamente!\n"); // teste de GOTO
+           }
+        switch (opcao) {
+               case 1:
+                    aviao = 1; // pre-seleciona o aviao
+                    selecionarAviao(); // passa pro void de validacao
+                    break;
+               case 2:
+                    aviao = 2; // pre-seleciona o aviao
+                    selecionarAviao(); // passa pro void de validacao
+                    break;
+               case 3:
+                    aviao = 3; // pre-seleciona o aviao
+                    selecionarAviao(); // passa pro void de validacao
+                    break;
+               case 4:
+                    aviao = 4; // pre-seleciona o aviao
+                    selecionarAviao(); // passa pro void de validacao
+                    break;
+               default: "Erro no sistema.\n";
+               }
+        } while (opcao < 1 || opcao > 4 || opcao == 1 && estado1[2] == esgotado[2]);
+}
+ 
+// outros voids acima
+ 
+void selecionarAviao() { // dava pra colocar "selecionarAviao(int aviao)" e depois chamar com "selecionarAviao(numero)", mas eh mais complicado
+     int opcao; // opcao selecionada no primeiro DO
+     limparTela();
+     printf("AVIAO SELECIONADO --> AVIAO DE NUMERO %d\nConsultando assentos automaticamente......\n", aviao);
+     consultarAssentos(aviao); // consulta os assentos do aviao de numero (variavel "aviao")
+     printf("Deseja RESERVAR UM ASSENTO agora?\nDigite 1 para SIM ou 2 para NAO\n");
+     do {
+         scanf("%d", &opcao);
+         if (opcao < 1 || opcao > 2) {
+                   printf("Erro!\nDigite 1 para SIM......\nDigite 2 para NAO......\n");
+                   }
+         switch(opcao) {
+                       case 1: // taca pro void de selecionar assento
+                            efetuarReserva();
+                            break;
+                       case 2:
+                            printf("Voltando para o menu...\n");
+                            limparTela();
+                            menu();
+                            break;
+                       default: "Erro no sistema!\n";
+                       }
+         } while (opcao < 1 || opcao > 2);                     
+}
+
+void desenharAviao() {
+    int x = 0; // variavel "dummy" usada em loop. o nome nao eh importante 
+    int y; // leia acima
+    switch(aviao) {
+                  case 1:
+                       for (y = 0; y < 16; y++) { // loop das cadeiras de primeira classe
+                           if (y == 1 || y == 3 || y == 4 || y == 6 || y == 9 || y == 11 || y == 12 || y == 14) { // pula o desenho de "partes em branco"
+                          	  printf(" "); // desenha um espaco na parte em branco
+                           } else {
+                             printf("%c", assentosP1[x]); // desenha se ta livre ou ocupado
+                             x++; // adiciona 1 para o valor de cadeiras "reais"
+                           }
+                           if (y == 7) {
+                              printf("     ||     "); // da espaco pra "segunda tela"
+                              printf("1      2    3      4||\n"); // desenha os numeros de referencia e a legenda
+                           } else {
+                             if (y == 15) {
+                             printf("     ||     "); // da espaco
+                             printf("5      6    7      8||\n"); // numeros e legenda
+                             }
+                           }
+                        }
+                        x = 0; // reseta a variavel x para o prox loop
+                        for (y = 16; y < 56; y++) { // loop das cadeiras economicas
+                            if (y == 19 || y == 20 || y == 27 || y == 28 || y == 35 || y == 36 || y == 43 || y == 44 || y == 51 || y == 52) { // pula o desenho de "partes em branco"
+                               printf(" "); // desenha espaco em branco
+                            } else {
+                                printf("%c", assentosN1[x]); // desenha o array
+                                x++;
+                            }
+                             if (y == 23) {
+                                   printf("     ||     "); // espaco antes de desenhar a "segunda tela"
+                                   printf("9  10 11    12 13 14||\n"); // fileira                                  
+                                   }
+                             else {
+                                  if (y == 31) {
+                                     printf("     ||     ");  // espaco antes de desenhar a "segunda tela"
+                                     printf("15 16 17    18 19 20||\n"); // fileira                                  
+                                     }
+                                  else {
+                                       if (y == 39) {
+                                            printf("     ||     ");  // espaco antes de desenhar a "segunda tela"
+                                            printf("21 22 23    24 25 26||\n"); // fileira                                  
+                                            }
+                                       else {
+                                            if (y == 47) {
+                                                  printf("     ||     ");  // espaco antes de desenhar a "segunda tela"
+                                                  printf("27 28 29    30 31 32||\n"); // fileira                                  
+                                                  }
+                                        	else {
+                                            	if (y == 55) {
+                                                	printf("     ||     ");  // espaco antes de desenhar a "segunda tela"
+                                                	printf("33 34 35    36 37 38||\n"); // fileira         
+			                    				}
+                                            }
+                                    	}
+                                    }
+                                }
+                           }
+                           break;
+                           case 2:
+                                for (y = 0; y < 16; y++) { // loop das cadeiras de primeira classe
+                                if (y == 1 || y == 3 || y == 4 || y == 6 || y == 9 || y == 11 || y == 12 || y == 14) { // pula o desenho de "partes em branco"
+                               	  printf(" "); // desenha um espaco na parte em branco
+                                } else {
+                                  printf("%c", assentosP2[x]); // desenha se ta livre ou ocupado
+                                  x++; // adiciona 1 para o valor de cadeiras "reais"
+                                }
+                                if (y == 7) {
+                                   printf("     ||     "); // da espaco pra "segunda tela"
+                                   printf("1      2    3      4||\n"); // desenha os numeros de referencia e a legenda
+                                } else {
+                                  if (y == 15) {
+                                  printf("     ||     "); // da espaco
+                                  printf("5      6    7      8||\n"); // numeros e legenda
+                                  }
+                                }
+                             }
+                             x = 0; // reseta a variavel x para o prox loop
+                             for (y = 16; y < 56; y++) { // loop das cadeiras economicas
+                                 if (y == 19 || y == 20 || y == 27 || y == 28 || y == 35 || y == 36 || y == 43 || y == 44 || y == 51 || y == 52) { // pula o desenho de "partes em branco"
+                                    printf(" "); // desenha espaco em branco
+                                 } else {
+                                     printf("%c", assentosN2[x]); // desenha o array
+                                     x++;
+                                 }
+                                 if (y == 23) {
+                                    printf("     ||     "); // espaco antes de desenhar a "segunda tela"
+                                    printf("9  10 11    12 13 14||\n"); // fileira                                  
+                                    }
+                                 else {
+                                      if (y == 31) {
+                                         printf("     ||     ");  // espaco antes de desenhar a "segunda tela"
+                                         printf("15 16 17    18 19 20||\n"); // fileira                                  
+                                         }
+                                      else {
+                                           if (y == 39) {
+                                              printf("     ||     ");  // espaco antes de desenhar a "segunda tela"
+                                              printf("21 22 23    24 25 26||\n"); // fileira                                  
+                                              }
+                                           else {
+                                                if (y == 47) {
+                                                   printf("     ||     ");  // espaco antes de desenhar a "segunda tela"
+                                                   printf("27 28 29    30 31 32||\n"); // fileira                                  
+                                                   }
+                                             	else {
+                                                 	if (y == 55) {
+                                                     	printf("     ||     ");  // espaco antes de desenhar a "segunda tela"
+                                                     	printf("33 34 35    36 37 38||\n"); // fileira         
+			                          			}
+                                           }
+                                       }
+                                }
+                           }
+                           break;
+                           default: "Erro fatal!";
+                  }
+                                
+        }
+    printf("------------------------------------------\n------------------------------------------\n");
+    printf("\nLEGENDA:\nL = ASSENTO LIVRE\nR = ASSENTO RESERVADO\n\n");
+    }
+
+void efetuarReserva() {
+     printf("SELECIONE O SEU ASSENTO:\nDigite o NUMERO do assento que deseja reservar...\n(Os numeros das cadeiras estao a sua DIREITA)");
+     do { // apesar que deixaria mais organizado
+        scanf("%d", &selecao);
+        if (selecao < 1 || selecao > 38) { 
+           printf("Digite um numero de 1 a 38!\n"); // erro pra caso o cara coloque um numero negativo ou maior que 38
+           }
+        selecao == (selecao - 1); // mudando para o valor array da coisa (0-37 ao inves de 1-38)
+        switch(aviao) {
+                      case 1:
+                            if (selecao >= 0 && selecao <= 7) { // se for uma das cadeiras x-men primeira classe
+                               if (assentosP1[selecao] == 'R') { // se o assento estiver reservado...
+                                  printf("O assento selecionado esta RESERVADO! Tente outro.\n"); // ??? ADICIONAR GOTO ???
+                                  }
+                               else {
+                                    selecionarAssento(); // ir para o menu de selecionar assento
+                                    }
+                            }
+                            else {
+                                 if (selecao >= 8 && selecao <= 38) { // cadeiras normais
+                                    if (assentosN1[selecao] == 'R') {
+                                       printf("O assento selecionado esta RESERVADO! Tente outro.\n");
+                                       }
+                                    else {
+                                         selecionarAssento();
+                                         }
+                                 }
+                            }
+                            break;
+                      case 2:
+                            if (selecao >= 0 && selecao <= 7) { // se for uma das cadeiras x-men primeira classe
+                               if (assentosP2[selecao] == 'R') { // se o assento estiver reservado...
+                                  printf("O assento selecionado esta RESERVADO! Tente outro.\n"); // ??? ADICIONAR GOTO ???
+                                  }
+                               else {
+                                    selecionarAssento(); // ir para o menu de selecionar assento
+                                    }
+                            }
+                            else {
+                                 if (selecao >= 8 && selecao <= 38) { // cadeiras normais
+                                    if (assentosN2[selecao] == 'R') {
+                                       printf("O assento selecionado esta RESERVADO! Tente outro.\n");
+                                       }
+                                    else {
+                                         selecionarAssento();
+                                         }
+                                 }
+                            }
+                            break;
+                      case 3:
+                            if (selecao >= 0 && selecao <= 7) { // se for uma das cadeiras x-men primeira classe
+                               if (assentosP3[selecao] == 'R') { // se o assento estiver reservado...
+                                  printf("O assento selecionado esta RESERVADO! Tente outro.\n"); // ??? ADICIONAR GOTO ???
+                                  }
+                               else {
+                                    selecionarAssento(); // ir para o menu de selecionar assento
+                                    }
+                            }
+                            else {
+                                 if (selecao >= 8 && selecao <= 38) { // cadeiras normais
+                                    if (assentosN3[selecao] == 'R') {
+                                       printf("O assento selecionado esta RESERVADO! Tente outro.\n");
+                                       }
+                                    else {
+                                         selecionarAssento();
+                                         }
+                                 }
+                            }
+                            break;
+                      case 4:
+                            if (selecao >= 0 && selecao <= 7) { // se for uma das cadeiras x-men primeira classe
+                               if (assentosP4[selecao] == 'R') { // se o assento estiver reservado...
+                                  printf("O assento selecionado esta RESERVADO! Tente outro.\n"); // ??? ADICIONAR GOTO ???
+                                  }
+                               else {
+                                    selecionarAssento(); // ir para o menu de selecionar assento
+                                    }
+                            }
+                            else {
+                                 if (selecao >= 8 && selecao <= 38) { // cadeiras normais
+                                    if (assentosN4[selecao] == 'R') {
+                                       printf("O assento selecionado esta RESERVADO! Tente outro.\n");
+                                       }
+                                    else {
+                                         selecionarAssento();
+                                         }
+                                 }
+                            }
+                            break;
+                            default: "Erro critico!";
+                      }
+     } while (selecao < 1 || selecao > 38); // enquanto o cara nao fizer o negocio direito, vai dar isso ai
+}
+
+void selecionarAssento() {
+     int opc; // variavel da opcao selecionada no menu
+     if (selecao > 0 && selecao < 5) { // 1a classe
+        printf("Voce selecionou o assento %d, PRIMEIRA CLASSE.\nValor: %d\nDeseja CONTINUAR? (Digite 1 para SIM, 2 para NAO)\n", selecao, VALORP);
+        }
+     else {
+          printf("Voce selecionou o assento %d, ECONOMICO.\nValor: %d\nDeseja CONTINUAR? (Digite 1 para SIM, 2 para NAO)\n", selecao, VALORE);
+          }
+     do { // hora do loop
+         scanf("%d", &opc);
+         if (opc != 1 && opc != 2) { // aceitar so 1 e 2. colocar opc < 1 e opc > 2 ia ser o mesmo numero de condicoes entao optei por isso ai mesmo
+            printf("Digite 1 para SIM......\n2 para NAO......\n");
+            }
+         switch(opc) {
+                     case 1:
+                          printf("Procedendo ao pagamento...\n");
+                          if (selecao > 0 && selecao < 5) { // 1a classe
+                             if (saldo < 150) {
+                                printf("Saldo insuficiente para o assento requisitado!\nSaldo necessario: %d\n", VALORP);
+                             }
+                             else {
+                                  switch(aviao) {
+                                                case 1:
+                                                     assentosP1[selecao] = 'R';
+                                                     break;
+                                                case 2:
+                                                     assentosP2[selecao] = 'R';
+                                                     break;
+                                                case 3:
+                                                     assentosP3[selecao] = 'R';
+                                                     break;
+                                                case 4:
+                                                     assentosP4[selecao] = 'R';
+                                                     break;
+                                                default: "Erro critico!\n";
+                                  printf("Assento reservado com sucesso!\nPressione qualquer tecla para voltar para o menu...\n");
+                                  }
+                             }
+                          }
+                          else { // se nao for 1a classe
+                             if (saldo < 80) {
+                                printf("Saldo insuficiente para o assento requisitado!\nSaldo necessario: %d\n", VALORE);
+                             }
+                             else {
+                                  assentosN1[selecao] = 'R';
+                                  printf("Assento reservado com sucesso!\nPressione qualquer tecla para voltar para o menu...\n");
+                             }
+                          }
+                          break;
+                     case 2:
+                          printf("Voltando para o menu...\n");
+                          limparTela();
+                          menu();
+                          break;
+                     default: "Erro fatal!\n";
+         }
+     } while (opc < 1 || opc > 2);
+}
+void consultarAssentos(int a) {
+     printf("Consultando assentos do aviao %d", aviao);
+     desenharAviao();
+void cancelarReserva() {
+     int o;
+     int opcao;
+     desenharAviao();
+     do {
+         printf("Selecione o AVIAO utilizando um numero de 1 a 4......\n");
+         if (opcao < 1 || opcao > 4) {
+            printf("Digite um numero de 1 a 4!\n");
+            }
+         switch (opcao) {
+                        case 1:
+                             aviao = 1; // seleciona o aviao
+                             break;
+                        case 2:
+                             aviao = 2; // seleciona o aviao
+                             break;
+                        case 3:
+                             aviao = 3; // seleciona o aviao
+                             break;
+                        case 4:
+                             aviao = 4; // seleciona o aviao
+                             break;
+                        default: "Erro no sistema.\n";
+         }
+         } while (opcao < 1 || opcao > 4);
+     do {
+         printf("Digite o numero do assento que deseja cancelar:\n");
+         scanf("%d", o);
+         if (selecao < 1 || selecao > 38) {
+            printf("Erro! Digite um numero de 1 a 38");
+            }
+         switch (aviao) {
+                        case 1:
+                             if (selecao >= 0 && selecao <= 7) {
+                                if (assentosP1[o] == 'R') {
+                                   assentosP1[o] = 'L';
+                                   printf("Pedido cancelado com sucesso! O assento agora se encontra LIVRE.\n");
+                                   }
+                             }
+                             if (selecao >= 8 && selecao <= 38) {
+                                if (assentosN1[o] == 'R') {
+                                   assentosN1[o] = 'L';
+                                   printf("Pedido cancelado com sucesso! O assento agora se encontra LIVRE.\n");
+                                   }
+                             }
+                             break;
+                        case 2:
+                             if (selecao >= 0 && selecao <= 7) {
+                                if (assentosP2[o] == 'R') {
+                                   assentosP2[o] = 'L';
+                                   printf("Pedido cancelado com sucesso! O assento agora se encontra LIVRE.\n");
+                                   }
+                             }
+                             if (selecao >= 8 && selecao <= 38) {
+                                if (assentosN2[o] == 'R') {
+                                   assentosN2[o] = 'L';
+                                   printf("Pedido cancelado com sucesso! O assento agora se encontra LIVRE.\n");
+                                   }
+                             }
+                             break;
+                        case 3:
+                             if (selecao >= 0 && selecao <= 7) {
+                                if (assentosP3[o] == 'R') {
+                                   assentosP3[o] = 'L';
+                                   printf("Pedido cancelado com sucesso! O assento agora se encontra LIVRE.\n");
+                                   }
+                             }
+                             if (selecao >= 8 && selecao <= 38) {
+                                if (assentosN4[o] == 'R') {
+                                   assentosN4[o] = 'L';
+                                   printf("Pedido cancelado com sucesso! O assento agora se encontra LIVRE.\n");
+                                   }
+                             }
+                             break;
+                        case 4:
+                             if (selecao >= 0 && selecao <= 7) {
+                                if (assentosP4[o] == 'R') {
+                                   assentosP4[o] = 'L';
+                                   printf("Pedido cancelado com sucesso! O assento agora se encontra LIVRE.\n");
+                                   }
+                             }
+                             if (selecao >= 8 && selecao <= 38) {
+                                if (assentosN4[o] == 'R') {
+                                   assentosN4[o] = 'L';
+                                   printf("Pedido cancelado com sucesso! O assento agora se encontra LIVRE.\n");
+                                   }
+                             }
+                             break;
+                        default: "Erro no sistema.\n";
+         }
+     } while (selecao < 1 || selecao > 38); 
+}
+
+/* -----------------------------
+ *       UTILIDADES E ETC       
+ * -----------------------------
+*/
+ 
+void limparTela() { // usar um system("cls") seco no programa causa LEAK DE MEMORIA. colocar ele num void anula isso
+     system("cls");
+}
+
+void converterEstado() {
+     int x;
+     int y;
+     int z = 0;
+     int aviao1p;
+     int aviao1n;
+     int aviao2p;
+     int aviao2n;
+     int aviao3p;
+     int aviao3n;
+     int aviao4p;
+     int aviao4n;
+     for (x = 0; x < 8; x++) {
+         if assentosP1[x] == 'R' {
+            aviao1p++;
+         }
+         if assentosN1[x] == 'R' {
+            aviao1n++;
+         }
+         if assentosP2[x] == 'R' {
+            aviao2p++;
+         }
+         if assentosN2[x] == 'R' {
+            aviao2n++;
+         }
+         if assentosP3[x] == 'R' {
+            aviao3p++;
+         }
+         if assentosN4[x] == 'R' {
+            aviao4n++;
+         }
+     }
+     for (y = 0; y < 11; y++) {
+       estado1[y] = disponivel[y];
+       estado2[y] = disponivel[y];
+       estado3[y] = disponivel[y];
+       estado4[y] = esgotado[y];
+     }
+     printf("algo");
+     printf("salve %s\n", &estado1);
+     printf("salve %s\n", &estado2);
+     printf("salve %s\n", &estado3);
+     printf("salve %s\n", &estado4);
+}           
