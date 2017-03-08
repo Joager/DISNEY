@@ -1,0 +1,91 @@
+#include <SDL.h>
+#include <iostream>
+#include <string>
+#include <windows.h>
+
+/* ----------
+ * Constantes
+ * ----------
+ */
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
+
+// criar a janela
+SDL_Window* window = NULL;
+// criar o recheio da janela	
+SDL_Surface* screenSurface = NULL;
+// aqui um hello world suave
+SDL_Surface* coeMundao = NULL;	
+// aqui tentamos iniciar video. dando o erro primeiro porque debugging
+
+// Gerenciamento do programa, independentemente do jogo
+
+bool initGame();
+void exitGame();
+bool loadData();
+
+// Gerenciamento do game, agora fora do programa
+
+// main
+
+bool initGame() {
+     bool success = true;  
+     // aqui tentamos iniciar video. dando o erro primeiro porque debugging
+	 if(SDL_Init(SDL_INIT_VIDEO) < 0){
+         // dar o erro
+		 printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+     }
+     // agora vai
+  	 else {
+          // seta window para baronda		
+  		  window = SDL_CreateWindow( "Baronda", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+  		  // manda erro se nao der pra criar a window sei la pq
+         if (window == NULL){
+            MessageBox(HWND_DESKTOP,"alalal","abe",MB_OK);
+            printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+         }
+  		 // e se funfar de boassa.......
+         else{			
+             screenSurface = SDL_GetWindowSurface( window );			
+         }
+	}
+    return success;     
+}
+
+bool loadData() {
+    bool success = true;
+    // tenta carregar a imagem na pasta graphics
+    coeMundao = SDL_LoadBMP("comiamae.bmp");
+    if (coeMundao == NULL) {          
+       printf("Unable to load image %s! SDL Error: %s\n", "graphics/ata.bmp", SDL_GetError());
+       MessageBox(0, SDL_GetError(),"erro",1);
+       success = false;
+    }
+    return success;    
+}
+
+void exitGame() {
+    SDL_FreeSurface(screenSurface);
+    SDL_DestroyWindow(window);	
+    SDL_Quit();     
+}
+
+int main( int argc, char* args[] ){	
+    // vamos checar se nao iniciou a funcao. como nao e void, vai iniciar automaticamente no check
+    if (!initGame()) {
+       printf("Erro ao iniciar o jogo.\n");
+    }
+    else {
+         // mesma coisa para carregar a midia base do game
+         if (!loadData()) {
+            printf("Erro ao carregar a imagem la (converter loadMedia para loadMedia(nome, path)\n");
+         }
+         else {
+              SDL_BlitSurface(coeMundao, NULL, screenSurface, NULL);
+              SDL_UpdateWindowSurface(window);
+              SDL_Delay(5000);
+         }
+    }
+    exitGame();
+	return 0;
+}
