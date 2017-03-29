@@ -1,0 +1,113 @@
+-- criar a database
+-- CREATE DATABASE	trabson;
+
+USE trabson;
+/* ---------------------------------------------------------------------------
+ * criar tabela da cidade. necessario criar primeiro porque ela tem uma coluna
+ * que e foreign key da table Alunos
+ * ---------------------------------------------------------------------------
+*/
+CREATE TABLE Cidades(
+PK_codCidade smallint identity(1,1),  
+nomeCidade varchar(25) not null,
+populacaoCidade int not null,
+PRIMARY KEY(PK_codCidade)
+);
+
+-- criar a tabela de alunos, extensao (informacao)Aluno para ficar reconhecivel
+CREATE TABLE Alunos(
+PK_matricula int identity(1,1),
+nomeAluno varchar(50) not null,
+cpfAluno varchar(12) not null, -- varchar ao inves de tinyint por causa do 0 a esquerda e tracos
+enderecoAluno varchar(30) not null,
+bairroAluno varchar(30) not null,
+numeroEnd smallint not null,
+compleEnd varchar(16),
+FK_cidadeAluno smallint, 
+PRIMARY KEY(PK_matricula),
+FOREIGN KEY(FK_cidadeAluno) REFERENCES Cidades(PK_codCidade) 
+);
+
+-- criar a tabela de cursos
+CREATE TABLE Cursos(
+PK_codCurso tinyint identity(1,1),
+nomeCurso varchar(50) not null,
+descricaoCurso varchar(255) not null,
+maxPeriodos tinyint,
+PRIMARY KEY(PK_codCurso)
+);
+
+-- criar tabela de admissao
+CREATE TABLE Admissao(
+PK_codAdmissao tinyint identity(1,1),
+descAdmissao varchar(255) not null,
+alunoCalouro bit not null, -- 0 = nao e calouro, 1 = calouro
+PRIMARY KEY (PK_codAdmissao)
+);
+-- fim da criacao de tabelas base
+
+-- modelagem de aluno & curso
+CREATE TABLE alunoCurso(
+FK_matriAluno int, -- nao precisei colocar not null porque eh PK
+FK_codCurso tinyint, -- mesma coisa
+FK_formaAdmissao tinyint, -- mesma coisa 
+anoAdmissao smallint not null,
+FOREIGN KEY(FK_matriAluno) REFERENCES Alunos(PK_matricula),
+FOREIGN KEY(FK_codCurso) REFERENCES Cursos(PK_codCurso),
+FOREIGN KEY(FK_formaAdmissao) REFERENCES Admissao(PK_codAdmissao)
+);
+-- fim da modelagem aluno & curso
+
+/* -------------------
+ * Povoando as tabelas
+ * -------------------
+*/
+
+-- cidade
+INSERT INTO Cidades(nomeCidade, populacaoCidade) VALUES ('Belo Horizonte', 1433000);
+INSERT INTO Cidades(nomeCidade, populacaoCidade) VALUES ('Sao Paulo', 1204000);
+INSERT INTO Cidades(nomeCidade, populacaoCidade) VALUES ('Rio de Janeiro', 6320000);
+INSERT INTO Cidades(nomeCidade, populacaoCidade) VALUES ('Curitiba', 1752000);
+INSERT INTO Cidades(nomeCidade, populacaoCidade) VALUES ('Recife', 1538000);
+
+-- alunos
+INSERT INTO Alunos(nomeAluno, cpfAluno, enderecoAluno, bairroAluno, numeroEnd, compleEnd, FK_cidadeAluno) VALUES
+('Matheus Antonio da Silva', '165109304-15', 'Rua Maria Jesus', 'Santa Cruz', 312, NULL, 1);
+INSERT INTO Alunos(nomeAluno, cpfAluno, enderecoAluno, bairroAluno, numeroEnd, compleEnd, FK_cidadeAluno) VALUES
+('Ana Flavia Almeida', '395123952-20', 'Rua Maria Jesus', 'Santa Cruz', 953, 'Apto 201', 1);
+INSERT INTO Alunos(nomeAluno, cpfAluno, enderecoAluno, bairroAluno, numeroEnd, compleEnd, FK_cidadeAluno) VALUES
+('Midi Izao Soled', '425243875-15', 'Rua Francisco Navarro', 'Marechal Fumeroni', 140, NULL, 3);
+INSERT INTO Alunos(nomeAluno, cpfAluno, enderecoAluno, bairroAluno, numeroEnd, compleEnd, FK_cidadeAluno) VALUES
+('Gabriel Bohm Santos', '615190325-17', 'Rua Lenin', 'Stalingrado', 220, NULL, 2);
+INSERT INTO Alunos(nomeAluno, cpfAluno, enderecoAluno, bairroAluno, numeroEnd, compleEnd, FK_cidadeAluno) VALUES
+('Felipe Goncalves', '403901561-20', 'Rua Decinco Raundon', 'Narutoun Soloquie', 123, NULL, 4);
+
+-- cursos 
+INSERT INTO Cursos(nomeCurso, descricaoCurso, maxPeriodos) VALUES
+('Ciencias da Computacao', 'Trabalha, fundamentalmente, na elaboração de programas de informática.', 8);
+INSERT INTO Cursos(nomeCurso, descricaoCurso, maxPeriodos) VALUES
+('Medicina', 'Trabalha na cura e na melhora de vida.', 10);
+INSERT INTO Cursos(nomeCurso, descricaoCurso, maxPeriodos) VALUES
+('Engenhari0a Civil', 'Trabalha na construcao de estruturas diversas.', 8);
+
+-- admissao
+INSERT INTO Admissao(descAdmissao, alunoCalouro) VALUES ('ENEM', 1);
+INSERT INTO Admissao(descAdmissao, alunoCalouro) VALUES ('Vestibular', 1);
+INSERT INTO Admissao(descAdmissao, alunoCalouro) VALUES ('Transferencia', 0);
+INSERT INTO Admissao(descAdmissao, alunoCalouro) VALUES ('Entrevista Pessoal', 1);
+INSERT INTO Admissao(descAdmissao, alunoCalouro) VALUES ('Indicacao', 1);
+
+-- curso do aluno
+INSERT INTO alunoCurso(FK_matriAluno, FK_codCurso, FK_formaAdmissao, anoAdmissao) VALUES (1, 1, 1, 2011);
+INSERT INTO alunoCurso(FK_matriAluno, FK_codCurso, FK_formaAdmissao, anoAdmissao) VALUES (2, 2, 2, 2012);
+INSERT INTO alunoCurso(FK_matriAluno, FK_codCurso, FK_formaAdmissao, anoAdmissao) VALUES (3, 3, 3, 2013);
+INSERT INTO alunoCurso(FK_matriAluno, FK_codCurso, FK_formaAdmissao, anoAdmissao) VALUES (4, 2, 4, 2014);
+INSERT INTO alunoCurso(FK_matriAluno, FK_codCurso, FK_formaAdmissao, anoAdmissao) VALUES (5, 1, 5, 2015);
+
+/* ----------------------
+ * Fim de povoar a aldeia
+ * ----------------------
+ */
+
+ SELECT nomeAluno, FK_matriAluno, FK_codCurso, FK_formaAdmissao, anoAdmissao FROM Alunos A, alunoCurso B;
+
