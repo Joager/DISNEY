@@ -1,0 +1,58 @@
+class Gerador {
+  	private double tamanhoTanque;
+  	private double volumeTanque = 0.0;
+  	private double potencia;
+  	private double capacidadeGeracao;
+  	protected Gerador geradores[] = new Gerador[4];
+	
+  	public Gerador {
+    	this.tamanhoTanque = tamanhoTanque;
+      	this.potencia = potencia;
+      	this.capacidadeGeracao = capacidadeGeracao;
+  	}
+  
+  	public Gerador getGerador(int id) {
+    	return geradores[id];
+  	}
+  
+  	public void setTamanhoTanque(double tamanho) {
+		this.tamanhoTanque = tamanho;
+  	}
+  
+  	public double getTamanhoTanque() {
+    	return this.tamanhoTanque;
+  	}
+  
+  	public void setVolumeTanque(double volume) {
+		this.volumeTanque = volume;
+  	}
+  
+  	public double getVolumeTanque() {
+    	return this.volumeTanque;
+  	}
+  	
+  	public void setPotencia(double potencia) {
+		this.tamanhoTanque = tamanho;
+  	}
+  	
+  	public double getPotencia() {
+    	return this.potencia;
+  	}
+  
+}
+
+class Main {
+  
+  	private static void popularGeradores() {
+      	Random random = new Random();
+      	for (int x = 0; x < geradores.length; x++ {
+          	if (x < 2) { // primeiros 2 geradores
+        		getGerador(x).set
+        }
+  	}
+  
+	public static void main(String[] args) {
+    	System.out.println("Populando os geradores com informacoes...");
+      	
+  	}
+}
